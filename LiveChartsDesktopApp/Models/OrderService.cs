@@ -19,6 +19,8 @@ namespace LiveChartsDesktopApp.Models
         List<ObservableValue> CancelledOrdersByProvinceList = new List<ObservableValue>();
         OrdersViewModel orderViewModel;
         public List<string> LabelsCancelledOrderByProvinceList { get; set; } = new List<string>();
+        List<ObservableValue> DraftOrdersByProvinceList = new List<ObservableValue>();
+        public List<string> LabelsDraftOrdersByProvinceList { get; set; } = new List<string>();
         public OrderService(OrdersViewModel ordersViewModel)
         {
             orderViewModel = ordersViewModel;
@@ -42,6 +44,7 @@ namespace LiveChartsDesktopApp.Models
                                     {
                                         dashboardModel = System.Text.Json.JsonSerializer.Deserialize<DashboardModel>(value);
                                         MapToChartModelCancelledByProvince(dashboardModel);
+                                        MapToChartModelDraftOrdersByProvince(dashboardModel);
                                     }));
                                 });
             _ = GetDataInitial();
@@ -58,7 +61,7 @@ namespace LiveChartsDesktopApp.Models
                 var response = await client.GetStringAsync("DashboardLoadFunction");
                 dashboardModel = System.Text.Json.JsonSerializer.Deserialize<DashboardModel>(response);
                 MapToChartModelCancelledByProvince(dashboardModel);
-
+                MapToChartModelDraftOrdersByProvince(dashboardModel);
             }
             catch (Exception ex)
             {
@@ -106,6 +109,40 @@ namespace LiveChartsDesktopApp.Models
 
 
         }
+        private void UpdateChartDataDraftOrdersByProvince()
+        {
+            orderViewModel.DraftOrdersByProvince = new SeriesCollection();
+            int i = 0;
+            foreach (var r in DraftOrdersByProvinceList)
+            {
+                orderViewModel.DraftOrdersByProvince.Add(new PieSeries()
+                {
+                    Title = LabelsDraftOrdersByProvinceList[i],
+                    Values = new ChartValues<ObservableValue> { DraftOrdersByProvinceList[i] },
+                    DataLabels = true
+                });
+                i++;
+            }
+
+            orderViewModel.Formatter = value => value.ToString("N");
+
+        }
+        private void GetChartValuesDraftOrdersByProvince(List<ChartModel> chartModels)
+        {
+            DraftOrdersByProvinceList = new List<ObservableValue>();
+            LabelsDraftOrdersByProvinceList = new List<string>();
+            int i = 0;
+            for (int k = 0; k < chartModels.Count; k++)
+            {
+                DraftOrdersByProvinceList.Add(new ObservableValue(0));
+            }
+            foreach (var cm in chartModels)
+            {
+                DraftOrdersByProvinceList[i].Value = cm.Data;
+                LabelsDraftOrdersByProvinceList.Add(cm.Label);
+                i++;
+            }
+        }
         private void MapToChartModelCancelledByProvince(DashboardModel data)
         {
             List<ChartModel> chartModels = new List<ChartModel>();
@@ -114,6 +151,17 @@ namespace LiveChartsDesktopApp.Models
                 chartModels.Add(new ChartModel { Data = Convert.ToInt32(d.Value), Label = d.Key });
             }
             UpdateChartDataCancelledOrderByProvince(chartModels);
+        }
+
+        private void MapToChartModelDraftOrdersByProvince(DashboardModel data)
+        {
+            List<ChartModel> chartModels = new List<ChartModel>();
+            foreach (var d in data.DraftOrdersByProvince)
+            {
+                chartModels.Add(new ChartModel { Data = Convert.ToInt32(d.Value), Label = d.Key });
+            }
+            GetChartValuesDraftOrdersByProvince(chartModels);
+            UpdateChartDataDraftOrdersByProvince();
         }
     }
 }

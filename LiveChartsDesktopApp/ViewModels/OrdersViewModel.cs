@@ -28,6 +28,28 @@ namespace LiveChartsDesktopApp.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private SeriesCollection draftOrdersByProvince;
+        public SeriesCollection DraftOrdersByProvince
+        {
+            get { return draftOrdersByProvince; }
+            set
+            {
+                draftOrdersByProvince = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string[] labelsDraftOrderByProvince;
+        public string[] LabelsDraftOrderByProvince
+        {
+            get { return labelsDraftOrderByProvince; }
+            set
+            {
+                labelsDraftOrderByProvince = value;
+                OnPropertyChanged();
+            }
+        }
         public Func<double, string> Formatter { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;

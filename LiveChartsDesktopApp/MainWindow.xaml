@@ -6,8 +6,38 @@
         xmlns:local="clr-namespace:LiveChartsDesktopApp"
        
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+           xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+     TextElement.FontWeight="Regular"
+     TextElement.FontSize="13"
+     TextOptions.TextFormattingMode="Ideal"
+     TextOptions.TextRenderingMode="Auto"
+     Background="{DynamicResource MaterialDesignPaper}"
+     FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <local:CancelledOrders></local:CancelledOrders>
+
+        <ScrollViewer>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="300"></RowDefinition>
+                    <RowDefinition Height="300"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50*"></ColumnDefinition>
+
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Background="Blue">
+                    <TextBlock  Margin= "10 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="20"  Foreground="White">Real Time Monitoring App</TextBlock>
+                </Grid>
+                <Grid Grid.Column="0" Grid.Row="1">
+                    <local:CancelledOrders></local:CancelledOrders>
+                </Grid>
+                <Grid Grid.Column="0" Grid.Row="2">
+                    <local:DraftOrdersByProvince></local:DraftOrdersByProvince>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>
